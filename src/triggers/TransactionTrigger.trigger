@@ -13,6 +13,7 @@ trigger TransactionTrigger on Transaction__c (before insert, before update, afte
         if(Trigger.isInsert) {
             AccountAvailableAmount.updateAmountInAccount(Trigger.new);
             BudgetAvailableAmount.updateTheBalanceOfBudgets(Trigger.new);
+            IncomeTransaction.updateAccount(Trigger.new);
         } else if(Trigger.isUpdate) {
             
         }

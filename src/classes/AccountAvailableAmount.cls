@@ -14,11 +14,13 @@ public class AccountAvailableAmount {
         for(Transaction__c tran : transactions) {
             for(Account__c acco : accountsCurrentlyInDatabase) {
                 if(tran.Account__c == acco.Id) {
-                    if(acco.AccountType__c == 'Bank') {
-                        acco.AmountAvailable__c = acco.AmountAvailable__c - tran.Amount__c; 
-                    } else if(acco.AccountType__c == 'Credit Card') {
-                        acco.AvailableCredit__c = acco.AvailableCredit__c - tran.Amount__c;
-                    }
+                    if(tran.Income__c == FALSE) {
+                    	if(acco.AccountType__c == 'Bank') {
+                       	 acco.AmountAvailable__c = acco.AmountAvailable__c - tran.Amount__c; 
+                   	 } else if(acco.AccountType__c == 'Credit Card') {
+                      	  acco.AvailableCredit__c = acco.AvailableCredit__c - tran.Amount__c;
+                    	}
+                	}
                 }
             }            
         }

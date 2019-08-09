@@ -13,7 +13,9 @@ public class BudgetAvailableAmount {
         for(Transaction__c trans : transactions) {
             for(Budget__c bud : budgetCurrentlyInDatabase) {
                 if(trans.Budget__c == bud.Id) {
-                    bud.TotalBudget__c = bud.TotalBudget__c - trans.Amount__c;
+                    if(trans.Income__c == FALSE) {
+                    	bud.TotalBudget__c = bud.TotalBudget__c - trans.Amount__c;
+                	}
                 }
             }
         }
