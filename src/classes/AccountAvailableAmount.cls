@@ -1,30 +1,27 @@
 public class AccountAvailableAmount {
     
-    public static void updateAvailableAmountInAccount(List<Transaction__c> transactions) {
+    public static void updateAmountInAccount(List<Transaction__c> transactions) {
         
-        Set<Id> AccIds = new Set<Id>();
-        // Empty List
-        List<Decimal> amountMoney = new List<Decimal>();
-        
-        // List of amount found in Account and then in Transaction
-        List<Account__c> accountBankAvailableAmount = [SELECT AmountAvailable__c, AccountType__c FROM Account__c]; // WHERE AccountType__c = 'Bank'
-        List<Transaction__c> transactionAmount = [SELECT Amount__c, Account__r.Name FROM Transaction__c];
-        
-        for(Transaction__c t : transactions){
-            Decimal balance = 0;
+        // Create a list of id for Account that is being selected
+        List<Id> accountIdsPicked = new List<Id>();
+        for(Transaction__c tList : transactions) {
+            accountIdsPicked.add(tlist.Account__c);
         }
         
-        
-        Integer sumAmount = 0;
-   		
+        List<Account__c> accountsCurrentlyInDatabase = [SELECT AmountAvailable__c, AvailableCredit__c, AccountType__c FROM Account__c WHERE Id IN : accountIdsPicked];
         
         
-        
-        
-        
-        System.debug('Account: ' + accountBankAvailableAmount);
-        System.debug('Transaction: ' + transactionAmount);
-        System.debug('New Amount: ' + sumAmount);
+        for(Transaction__c tran : transactions) {
+            for(Account__c acco : accountsCurrentlyInDatabase) {
+                if(tran.Account__c == acco.Id) {
+                    if(acco.AccountType__c == 'Bank') {
+                        acco.AmountAvailable__c = acco.AmountAvailable__c - tran.Amount__c; 
+                    } else if(acco.AccountType__c == 'Credit Card') {
+                        acco.AvailableCredit__c = acco.AvailableCredit__c - tran.Amount__c;
+                    }
+                }
+            }            
+        }
+        update accountsCurrentlyInDatabase;
     }
-
 }
